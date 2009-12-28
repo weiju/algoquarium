@@ -1,0 +1,164 @@
+<html>
+  <head>
+		<title>Closest Pairs</title>
+		<style type="text/css">
+			#svgcanvas {
+				width: 400px; height: 300px; border: 1px solid #000;
+				-webkit-border-radius: 5px;
+				-moz-border-radius: 5px;
+				border-radius: 5px;
+				margin: 3px;
+			}
+			h2 { font-family: Arial, Helvetica, Verdana; }
+		</style>
+		<script src="jquery-1.3.2.js"></script>
+		<script src="raphael.js"></script>
+		<script src="closest_pairs.js"></script>
+		<script type="text/javascript">
+			var allPoints = new cp.PointSet();
+			var canvas = null;
+			var FRAME_TIME = 100;
+			var minDist = Number.MAX_VALUE;
+			var closestPair = null;
+			var sweepLine = null;
+			var sweepBounds = null;
+			var sweepBoundsY = null;
+			var closestPairSegment = null;
+			var i = 0, j = 0;
+
+
+      function drawBackground() {
+				var background = canvas.rect(0, 0, 400, 300, 5);
+				background.attr('stroke', 'none');
+				background.attr('fill', '45-#ccc-#fff');
+      }
+			function drawPoint(x, y) {
+				var point = canvas.circle(x, y, 3);
+				point.attr('fill', '#000');
+				point.attr('stroke', 'none');
+				return point;
+			}
+			function drawSweepLine(x) {
+				var line = canvas.path('M ' + x + ' 0 V 300');
+				line.attr({stroke: '#f00', 'stroke-width': '3'});
+				return line;
+			}
+			function drawClosestPair() {
+				var p1 = closestPair[0];
+				var p2 = closestPair[1];
+				var line = canvas.path('M ' + p1.x + ' ' + p1.y + ' L ' +
+															 p2.x + ' ' + p2.y);
+				line.attr('stroke', '#0f0');
+				return line;
+			}
+			function drawSweepBounds(x, dist) {
+				var rect = canvas.rect(x - dist, 0, dist, 300);
+				rect.attr('fill', '#ff0');
+				rect.attr('fill-opacity', '0.5');
+				rect.attr('opacity', '0.5');
+				return rect;
+			}
+			function drawSweepBoundsY(p, dist) {
+				var rect = canvas.rect(p.x - dist, p.y - dist, dist, dist * 2);
+				rect.attr('fill', '#0ff');
+				rect.attr('fill-opacity', '0.5');
+				rect.attr('opacity', '0.5');
+				return rect;
+			}
+			function clicked(evt) {
+				var x = evt.pageX - this.offsetLeft;
+				var y = evt.pageY - this.offsetTop;
+				var gfx = drawPoint(x, y);
+				var p	= new cp.Point(x, y);
+				p.gfx = gfx;
+				allPoints.add(p);
+			}
+
+     function reset() {
+        allPoints = new cp.PointSet();
+        minDist = Number.MAX_VALUE;
+        closestPair = null;
+        sweepLine = null;
+        sweepBounds = null;
+        sweepBoundsY = null;
+        closestPairSegment = null;
+        i = 0; j = 0;
+        canvas.clear();
+        drawBackground();
+      }
+
+			function processStrip(i) {
+				var p = allPoints.get(i);
+				for (j = 0; j < i; j++) {
+					var q = allPoints.get(j);
+					if (Math.abs(p.x - q.x) < minDist &&
+						  Math.abs(p.y - q.y) < minDist) {
+						var d = p.dist(q);
+						if (d < minDist) {
+							minDist = d;
+							closestPair = [];
+							closestPair[0] = p;
+							closestPair[1] = q;
+						}
+					}
+				}
+			}
+			function removeSweepObjects() {
+				if (sweepLine !== null) { sweepLine.remove(); }
+				if (sweepBounds !== null) { sweepBounds.remove(); }
+				if (sweepBoundsY !== null) { sweepBoundsY.remove(); }
+				if (closestPairSegment !== null) { closestPairSegment.remove(); }
+			}
+
+			function sweepIteration() {
+
+				if (i < allPoints.length()) {
+					removeSweepObjects();
+					var p = allPoints.get(i);
+					if (minDist < Number.MAX_VALUE) {
+						sweepBounds  = drawSweepBounds(p.x, minDist);
+						sweepBoundsY  = drawSweepBoundsY(p, minDist);
+					}
+					sweepLine = drawSweepLine(p.x);
+					processStrip(i);
+				}
+
+				// draw the last pair, ensures we will draw it in any case
+				if (minDist < Number.MAX_VALUE) {
+					closestPairSegment = drawClosestPair();
+				}
+
+				// decide whether we are done
+				if (i <= allPoints.length() - 1) {
+					i++;
+					setTimeout(sweepIteration, FRAME_TIME);
+				}
+			}
+
+			function sweep() {
+				allPoints.sort();
+				setTimeout(sweepIteration, FRAME_TIME);
+			}
+
+			$(function() {
+				canvas = Raphael("svgcanvas", 400, 300);
+        drawBackground();
+
+				$('#svgcanvas').click(clicked);
+				$('#sweep').click(function (e) {
+					sweep();
+				});
+				$('#reset').click(function (e) {
+					Log.debug('Reset');
+          reset();
+				});
+			});
+		</script>
+	</head>
+	<body>
+		<h2>Closest Pairs</h2>
+		<div id="svgcanvas"></div>
+		<div><input id="sweep" type="submit" value="Sweep Line" /> <input id="reset" type="submit" value="Reset" /></div>
+	</body>
+</html>
+

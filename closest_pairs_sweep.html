@@ -1,6 +1,6 @@
 <html>
   <head>
-		<title>Closest Pairs</title>
+		<title>Closest Pairs (Sweep Line)</title>
 		<style type="text/css">
 			#svgcanvas {
 				width: 400px; height: 300px; border: 1px solid #000;
@@ -9,7 +9,9 @@
 				border-radius: 5px;
 				margin: 3px;
 			}
-			h2 { font-family: Arial, Helvetica, Verdana; }
+			body { font-family: Arial, Helvetica, Verdana; }
+			h2,h3 { font-family: Arial, Helvetica, Verdana; }
+			.footer { font-size: small; font-style: italic; }
 		</style>
 		<script src="jquery-1.3.2.js"></script>
 		<script src="raphael.js"></script>
@@ -156,9 +158,23 @@
 		</script>
 	</head>
 	<body>
-		<h2>Closest Pairs</h2>
+		<h2>Closest Pairs (Sweep Line)</h2>
+		<h3>Description</h3>
+		<p>
+			This is the visualization of the "Closest Pairs" algorithm, solved with
+			a sweep line approach. The code is available
+			<a href="http://github.com/weiju/algoquarium">here.</a> The visualization
+			is done in an SVG element using the
+			<a href="http://raphaeljs.com/">Raphael</a> library.
+		</p>
 		<div id="svgcanvas"></div>
-		<div><input id="sweep" type="submit" value="Sweep Line" /> <input id="reset" type="submit" value="Reset" /></div>
+		<div><input id="sweep" type="submit" value="Go !" /> <input id="reset" type="submit" value="Reset" /></div>
+		<h3>Usage</h3>
+		<p>
+			Enter points by clicking into the drawing area.
+			To run the algorithm, simply click the "Go !" button.
+		</p>
+		<div class="footer">&copy; 2009 Wei-ju Wu, Code distributed under the BSD License</div>
 	</body>
 </html>
 

@@ -90,7 +90,7 @@ function ViewImage(canvas) {
     var y = 30;
     var width = 800;
     var height = 904;
-    var img = canvas.image('slice1.png', x, y, width, height);
+    var img = canvas.image('slice1.jpg', x, y, width, height);
     var oldx = 0;
     var oldy = 0;
 

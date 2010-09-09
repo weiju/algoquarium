@@ -1,0 +1,27 @@
+<html>
+  <head>
+		<title>Brainmap Imageviewer</title>
+		<style type="text/css">
+			#svgelem {
+				width: 100%; height: 100%; border: 1px solid #000;
+				/* -webkit-border-radius: 5px;
+				-moz-border-radius: 5px;
+				border-radius: 5px;*/
+				margin: 3px;
+			}
+			h2 { font-family: Arial, Helvetica, Verdana; }
+		</style>
+		<script src="jquery-1.4.2.min.js"></script>
+		<script src="raphael-1.5.2.min.js"></script>
+		<script src="imageview.js"></script>
+		<script type="text/javascript">
+		$(function() {
+     var viewer = new Viewer('svgelem');
+	  });
+		</script>
+	</head>
+	<body style="margin: 0px;">
+		<div id="svgelem"></div>
+	</body>
+</html>
+
